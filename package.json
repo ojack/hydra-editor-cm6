@@ -11,7 +11,12 @@
     "vite": "^2.9.9"
   },
   "dependencies": {
+    "@codemirror/autocomplete": "^6.0.1",
+    "@codemirror/closebrackets": "^0.19.2",
+    "@codemirror/comment": "^0.19.1",
     "@codemirror/lang-javascript": "^6.0.0",
+    "@codemirror/search": "^6.0.0",
+    "@codemirror/theme-one-dark": "^6.0.0",
     "codemirror": "^6.0.0"
   }
 }
