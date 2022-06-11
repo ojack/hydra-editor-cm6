@@ -1,10 +1,5 @@
-import Editor from './editor.js'
-import repl from './hydra-environment/repl.js'
-// import Hydra from 'hydra-synth'
-
-// if (typeof (window as any).global === 'undefined') {
-//     (window as any).global = window;
-//   }
+import Editor from './src/editor.js'
+import repl from './src/hydra-environment/repl.js'
 
 const editor = new Editor({ parent: document.querySelector('#app') })
 
