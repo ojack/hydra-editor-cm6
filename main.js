@@ -1,48 +1,22 @@
-// import './style.css'
+import Editor from './editor.js'
+import repl from './hydra-environment/repl.js'
+// import Hydra from 'hydra-synth'
 
-import { drawSelection, EditorView, keymap} from "@codemirror/view"
-import {EditorState} from "@codemirror/state"
-import {defaultKeymap, history, historyKeymap} from "@codemirror/commands"
-import {syntaxHighlighting, defaultHighlightStyle, bracketMatching} from "@codemirror/language"
-import {javascript} from "@codemirror/lang-javascript"
-import { commentKeymap } from '@codemirror/comment';
-import { oneDark } from '@codemirror/theme-one-dark';
-import { highlightSelectionMatches, searchKeymap } from '@codemirror/search';
-import { autocompletion } from '@codemirror/autocomplete';
+// if (typeof (window as any).global === 'undefined') {
+//     (window as any).global = window;
+//   }
 
-// import { closeBrackets, closeBracketsKeymap } from '@codemirror/closebrackets';
-// import { highlightSelectionMatches, searchKeymap } from '@codemirror/search';
-// import { bracketMatching } from '@codemirror/matchbrackets';
+const editor = new Editor({ parent: document.querySelector('#app') })
 
-let myView = new EditorView({
-  state: EditorState.create({
-    doc: "osc()",
-    extensions: [
-      history(),
-      drawSelection(),
-      javascript(),
-      // autocompletion(),
-      highlightSelectionMatches(),
-      syntaxHighlighting(defaultHighlightStyle),
-      bracketMatching(),
-      keymap.of([...defaultKeymap,   ...searchKeymap, ...commentKeymap, ...historyKeymap]),
-      EditorView.theme({
-        '&': {
-          backgroundColor: 'transparent',
-          fontSize: '20px',
-        },
-        '& .cm-line': {
-          maxWidth: 'fit-content',
-          background: 'hsla(50,23%,5%,0.6)',
-        },
-        '&.cm-focused': {
-          outline: 'none',
-        },
-      }),
-      oneDark
-    ]
-  }),
-  parent: document.querySelector('#app')
+editor.on('editor:evalLine', (line) => {
+    console.log('called eval line!')
+    repl.eval(line)
 })
 
+editor.on('editor:evalBlock', (line) => {
+    console.log('called eval line!')
+    repl.eval(line)
+})
 
+const hydra = new Hydra()
+osc(4, 0.1, 1.2).out()
