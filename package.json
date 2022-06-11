@@ -1,0 +1,17 @@
+{
+  "name": "hydra-editor-cm6",
+  "private": true,
+  "version": "0.0.0",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview"
+  },
+  "devDependencies": {
+    "vite": "^2.9.9"
+  },
+  "dependencies": {
+    "@codemirror/lang-javascript": "^6.0.0",
+    "codemirror": "^6.0.0"
+  }
+}
