@@ -12,9 +12,9 @@ const autocomplete = createHydraAutocomplete(hydra)
 const el = document.createElement('div')
 el.style.position = "absolute"
 el.style.width = "100%"
+el.style.height = "100%"
 el.style.top = "0px"
 el.style.left = "0px"
-el.style.padding = "10px"
 document.body.appendChild(el)
 
 const editor = new Editor({ parent: el, autocompleteOptions: autocomplete })

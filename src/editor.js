@@ -4,19 +4,20 @@ import {
   rectangularSelection, crosshairCursor, placeholder,
   lineNumbers, highlightActiveLineGutter, EditorView, 
 } from "@codemirror/view"
+import {tags as t} from "@lezer/highlight"
 import { EditorState } from "@codemirror/state"
 import {
   defaultHighlightStyle, syntaxHighlighting, indentOnInput, bracketMatching,
-  foldGutter, foldKeymap
+  foldGutter, foldKeymap, HighlightStyle
 } from "@codemirror/language"
 import { defaultKeymap, history, historyKeymap } from "@codemirror/commands"
 import { searchKeymap, highlightSelectionMatches } from "@codemirror/search"
-import { autocompletion, completeFromList, completionKeymap, closeBrackets, closeBracketsKeymap } from "@codemirror/autocomplete"
+import { autocompletion, completeFromList, completionKeymap, closeBrackets, closeBracketsKeymap, startCompletion } from "@codemirror/autocomplete"
 import { lintKeymap } from "@codemirror/lint"
 
 import { commentKeymap } from '@codemirror/comment';
 import { javascript } from "@codemirror/lang-javascript"
-import { oneDark } from '@codemirror/theme-one-dark';
+import { oneDark, oneDarkHighlightStyle} from '@codemirror/theme-one-dark';
 import { solarizedDark } from 'cm6-theme-solarized-dark';
 
 import { getLine, getBlock, getSelection } from './evalKeymaps.js'
@@ -58,13 +59,35 @@ export default class Editor extends EventEmitter {
           drawSelection(),
           dropCursor(),
           EditorView.lineWrapping,
+          EditorView.domEventHandlers({
+            click: (event, view) => {
+              console.log('click', event, view)
+              // startCompletion(view)
+            },
+            touchstart: (event, view) => {
+              startCompletion(view)
+            }
+          }),
           EditorState.allowMultipleSelections.of(true),
           indentOnInput(),
-          syntaxHighlighting(defaultHighlightStyle, { fallback: true }),
+          syntaxHighlighting(HighlightStyle.define([
+            {tag: t.keyword,
+              color: 'white'},
+            {tag: t.name, color: 'pink'},
+              {tag: [ t.deleted, t.character, t.propertyName, t.macroName],
+                color: 'white'},
+               {tag: [t.function(t.variableName), t.labelName],
+                color: 'white'},
+               {tag: [t.color, t.constant(t.name), t.standard(t.name)],
+                color: '#ff0'},
+               {tag: [t.definition(t.name), t.separator],
+                color: 'white'},
+          ])),
+          syntaxHighlighting(oneDarkHighlightStyle, { fallback: true }),
           bracketMatching(),
           closeBrackets(),
           autocompletion({ 
-           override: [autocompleteOptions], /*closeOnBlur: false*/
+           override: [autocompleteOptions], closeOnBlur: false
           }),
           rectangularSelection(),
           crosshairCursor(),
@@ -87,14 +110,36 @@ export default class Editor extends EventEmitter {
             '&': {
               backgroundColor: 'transparent',
               fontSize: '16px',
+              color: 'white'
             },
             '& .cm-line': {
               maxWidth: 'fit-content',
               // background: 'hsla(50,23%,5%,0.6)',
               background: 'rgba(0, 0, 0, 0.8)'
             },
+            '& .ͼo': {
+              color: 'white'
+            },
+            '& .cm-tooltip.cm-tooltip-autocomplete > ul': {
+              minWidth: '80px'
+            },
             '&.cm-focused': {
               outline: 'none',
+            },
+            '& .cm-tooltip': {
+              background: `rgba(0, 0, 0, 0.5)`,
+              // color: '#abb2bf'
+            },
+            '& .cm-tooltip-autocomplete > ul > li[aria-selected]': {
+              color: 'white',
+              // color: '#abb2bf',
+              backgroundColor: 'rgba(0, 0, 0, 0.8)'
+            },
+            '.cm-completionInfo': {
+              fontFamily: 'monospace',
+              fontStyle: 'italic',
+              // color: '#abb2bf',
+              padding: '1.5px 9px'
             },
             '.cm-completionIcon': {
               width: '8px',
@@ -102,7 +147,6 @@ export default class Editor extends EventEmitter {
               opacity: 1,
               paddingRight: '0px',
               marginRight: '6px'
-               
             },
             '.cm-completionIcon-src': {
               backgroundColor: 'orange',
