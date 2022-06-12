@@ -17,3 +17,6 @@ Already implemented:
 Autocomplete ideas:
 - include common code snippets
 - allow to prepopulate with random reasonable values, or with defaults
+- snippet completion? https://github.com/codemirror/lang-javascript/blob/main/src/snippets.ts
+- move parameter hints to tooltips rather than autocomplete
+- draggable parameters similar to glslEditor / chrome dev tools (widget decoration)

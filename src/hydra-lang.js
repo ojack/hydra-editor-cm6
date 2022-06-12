@@ -40,7 +40,7 @@ export default (hydra) => {
      ${h.glsl}
     \``
         const r = str.replace('"<placeholder>"', str2)
-        console.log('replaced', r)
+        // console.log('replaced', r)
         return {
         label: `setFunction(<${h.name}>)`,
         apply: r
@@ -54,7 +54,7 @@ export default (hydra) => {
 
     const functionOptions = hydraFuncs.map((h) => ({ 
         label: `${h.name}()`, type: h.type, name: h.name, /*detail: h.type,*/
-        apply:  `${h.name}().`,
+        apply:  `${h.name}()`,
         boost:  h.type === 'src' ? 99 : h.type === 'coord' ? 90: h.type === 'color' ? 40 : h.type === 'combine' ? 20 : 0,
         info:  h.inputs !== undefined ? `${h.name}( ${h.inputs.map((input) => `${input.name}${input.default ? ` = ${input.default}`: ''}`).join(', ')} )` : ''
     }))

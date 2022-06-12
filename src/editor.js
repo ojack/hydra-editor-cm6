@@ -2,23 +2,24 @@
 import {
   keymap, highlightSpecialChars, drawSelection, highlightActiveLine, dropCursor,
   rectangularSelection, crosshairCursor, placeholder,
-  lineNumbers, highlightActiveLineGutter, EditorView, 
+ /* lineNumbers, highlightActiveLineGutter, */EditorView, 
 } from "@codemirror/view"
 import {tags as t} from "@lezer/highlight"
 import { EditorState } from "@codemirror/state"
 import {
-  defaultHighlightStyle, syntaxHighlighting, indentOnInput, bracketMatching,
-  foldGutter, foldKeymap, HighlightStyle
+  /*defaultHighlightStyle,*/ syntaxHighlighting, indentOnInput, bracketMatching,
+ /* foldGutter,*/ foldKeymap, HighlightStyle
 } from "@codemirror/language"
 import { defaultKeymap, history, historyKeymap } from "@codemirror/commands"
 import { searchKeymap, highlightSelectionMatches } from "@codemirror/search"
-import { autocompletion, completeFromList, completionKeymap, closeBrackets, closeBracketsKeymap, startCompletion } from "@codemirror/autocomplete"
-import { lintKeymap } from "@codemirror/lint"
+import { autocompletion, /*completeFromList,*/ completionKeymap, closeBrackets, closeBracketsKeymap, startCompletion } from "@codemirror/autocomplete"
+import { lintKeymap, /*linter*/ } from "@codemirror/lint"
+// import Linter from "eslint4b-prebuilt";
 
 import { commentKeymap } from '@codemirror/comment';
-import { javascript } from "@codemirror/lang-javascript"
+import { javascript, /*esLint */ } from "@codemirror/lang-javascript"
 import { oneDark, oneDarkHighlightStyle} from '@codemirror/theme-one-dark';
-import { solarizedDark } from 'cm6-theme-solarized-dark';
+// import { solarizedDark } from 'cm6-theme-solarized-dark';
 
 import { getLine, getBlock, getSelection } from './evalKeymaps.js'
 import hydraKeys from './hydra-environment/keymaps.js'
@@ -49,13 +50,13 @@ export default class Editor extends EventEmitter {
         // doc: "osc()",
         lineWrapping: true,
         extensions: [
-          // lineNumbers(),
-          // highlightActiveLineGutter(),
+        //  lineNumbers(),
+       //   highlightActiveLineGutter(),
           placeholder('code here'),
           // lineWrapping(),
           highlightSpecialChars(),
           history(),
-          // foldGutter(),
+        //  foldGutter(),
           drawSelection(),
           dropCursor(),
           EditorView.lineWrapping,
@@ -85,10 +86,10 @@ export default class Editor extends EventEmitter {
           ])),
           syntaxHighlighting(oneDarkHighlightStyle, { fallback: true }),
           bracketMatching(),
-          closeBrackets(),
           autocompletion({ 
            override: [autocompleteOptions], closeOnBlur: false
           }),
+          closeBrackets(),
           rectangularSelection(),
           crosshairCursor(),
           highlightActiveLine(),
@@ -110,18 +111,23 @@ export default class Editor extends EventEmitter {
             '&': {
               backgroundColor: 'transparent',
               fontSize: '16px',
-              color: 'white'
+              color: 'white',
+              fontFamily: `'Roboto Mono', monospace`
+            },
+            '& .cm-scroller': {
+              fontFamily: `'Roboto Mono', monospace`
             },
             '& .cm-line': {
               maxWidth: 'fit-content',
               // background: 'hsla(50,23%,5%,0.6)',
-              background: 'rgba(0, 0, 0, 0.8)'
+              background: 'rgba(0, 0, 0, 0.7)'
             },
             '& .ͼo': {
               color: 'white'
             },
             '& .cm-tooltip.cm-tooltip-autocomplete > ul': {
-              minWidth: '80px'
+              minWidth: '80px',
+              fontFamily: `'Roboto Mono', monospace`
             },
             '&.cm-focused': {
               outline: 'none',
@@ -133,17 +139,18 @@ export default class Editor extends EventEmitter {
             '& .cm-tooltip-autocomplete > ul > li[aria-selected]': {
               color: 'white',
               // color: '#abb2bf',
-              backgroundColor: 'rgba(0, 0, 0, 0.8)'
+              backgroundColor: 'rgba(0, 0, 0, 0.7)'
             },
             '.cm-completionInfo': {
-              fontFamily: 'monospace',
+              // fontFamily: 'monospace',
+              fontFamily: `'Roboto Mono', monospace`,
               fontStyle: 'italic',
               // color: '#abb2bf',
               padding: '1.5px 9px'
             },
             '.cm-completionIcon': {
-              width: '8px',
-              height: '8px',
+              width: '4px',
+              height: '10px',
               opacity: 1,
               paddingRight: '0px',
               marginRight: '6px'
@@ -171,7 +178,8 @@ export default class Editor extends EventEmitter {
             //   whiteSpace: 'pre-wrap'
             // }
           }),
-          oneDark
+          oneDark,
+        //  linter(esLint(new Linter()))
           // solarizedDark
         ]
       }),

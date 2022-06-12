@@ -6,7 +6,15 @@ export default {
     // wrap everything in an async function
   var jsString = `(async() => {
     ${arg}
-})().catch(${(err) => log(err.message, "log-error")})`
+})().catch(${(err) => {
+  console.log('ERROR', err.message, "log-error")
+  console.log('STACK', err.stack.split("\n"), arg)
+  console.trace()
+  var caller_line = err.stack.split("\n")[2];
+var index = caller_line.indexOf("at ");
+var clean = caller_line.slice(index+2, caller_line.length);
+console.log('line', index, clean)
+}})`
     var isError = false
     try {
       eval(jsString)
@@ -14,7 +22,7 @@ export default {
       //log('')
     } catch (e) {
       isError = true
-      console.log("logging", e)
+      //console.log("logging", e, e.lineNumber)
       // var err = e.constructor('Error in Evaled Script: ' + e.message);
       // console.log(err.lineNumber)
     //   log(e.message, "log-error")

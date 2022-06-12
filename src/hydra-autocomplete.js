@@ -87,6 +87,7 @@ if (completePropertyAfter.includes(nodeBefore.name) &&
     // after a hydra function such as osc()
   } else if (object?.name === "CallExpression") {
     let variableName = context.state.sliceDoc(object.from, object.to)
+    console.log('word from', word.from)
     return {
       from: word.from,
       options: chainOptions,
