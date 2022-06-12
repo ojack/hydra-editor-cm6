@@ -11,7 +11,7 @@ import {
 } from "@codemirror/language"
 import { defaultKeymap, history, historyKeymap } from "@codemirror/commands"
 import { searchKeymap, highlightSelectionMatches } from "@codemirror/search"
-import { autocompletion, completionKeymap, closeBrackets, closeBracketsKeymap } from "@codemirror/autocomplete"
+import { autocompletion, completeFromList, completionKeymap, closeBrackets, closeBracketsKeymap } from "@codemirror/autocomplete"
 import { lintKeymap } from "@codemirror/lint"
 
 import { commentKeymap } from '@codemirror/comment';
@@ -24,7 +24,7 @@ import hydraKeys from './hydra-environment/keymaps.js'
 import EventEmitter from 'events'
 
 export default class Editor extends EventEmitter {
-  constructor({ parent = document.body } = {}) {
+  constructor({ parent = document.body, autocompleteOptions = [] } = {}) {
     super()
     const self = this
     const hydraKeymaps = Object.entries(hydraKeys).map(([key, val]) => ({
@@ -62,7 +62,9 @@ export default class Editor extends EventEmitter {
           syntaxHighlighting(defaultHighlightStyle, { fallback: true }),
           bracketMatching(),
           closeBrackets(),
-          autocompletion(),
+          autocompletion({ 
+           override: [autocompleteOptions]
+          }),
           rectangularSelection(),
           crosshairCursor(),
           highlightActiveLine(),
