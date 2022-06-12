@@ -13,7 +13,7 @@ const getObjectFromName = (name = '') => {
 
 
 
-const createAutocomplete = ( { srcOptions, chainOptions, hydraGlobals }) => (context) => {
+const createAutocomplete = ( { srcOptions, externalSourceOptions, combineNames, chainOptions, outputOptions, hydraGlobals }) => (context) => {
     let word = context.matchBefore(/\w*/)
 
     let nodeBefore = syntaxTree(context.state).resolveInner(context.pos, -1)
@@ -36,16 +36,27 @@ const createAutocomplete = ( { srcOptions, chainOptions, hydraGlobals }) => (con
         let object = nodeBefore.parent?.parent?.getChild('Expression')
         let variableName = context.state.sliceDoc(object.from, object.to)
         let lastValue = getObjectFromName(variableName)
-        console.log('completing arguments', variableName, lastValue)
-       // let object2 = nodeBefore.parent?.parent?.getChild('MemberExpression')
-       // let variableName2 = context.state.sliceDoc(object2.from, object2.to)
-       // console.log('completing arguments2', variableName2)
-        // let variableName = context.state.sliceDoc(object.from, object.to)
-        console.log('completing arguments', nodeBefore.name, object)
-        return {
-            from: word.from,
-            options: [{ label: 'o0'}]
+        console.log('last value', lastValue, combineNames)
+        if(lastValue === 'out') {
+          return { from: word.from, options: outputOptions }
         }
+        if(combineNames.includes(lastValue)) {
+          return { from: word.from, options: [...srcOptions, ...outputOptions, ...externalSourceOptions ] }
+        }
+        if(lastValue === 'src') {
+          return { from: word.from, options: [...externalSourceOptions, ...outputOptions] }
+        }
+        return null
+      //   console.log('completing arguments', variableName, lastValue)
+      //  // let object2 = nodeBefore.parent?.parent?.getChild('MemberExpression')
+      //  // let variableName2 = context.state.sliceDoc(object2.from, object2.to)
+      //  // console.log('completing arguments2', variableName2)
+      //   // let variableName = context.state.sliceDoc(object.from, object.to)
+      //   console.log('completing arguments', nodeBefore.name, object)
+      //   return {
+      //       from: word.from,
+      //       options: [{ label: 'o0'}]
+      //   }
     }
      if (completePropertyAfter.includes(nodeBefore.name) &&
          nodeBefore.parent?.name == "MemberExpression") {

@@ -12,16 +12,22 @@ export default (hydra) => {
       }
     //  if(typeof val === "object") console.log(val.constructor.name)
       return {
-      label: label,
-      type: type,
+      label,
+      type,
       detail: type,
       info: type
       // info: JSON.stringify(val)
     }})
   
     const hydraFuncs = hydraFunctions()
+    hydraFuncs.forEach((h) => {
+        if (h.type === "combine" || h.type === "combineCoord") {
+            h.inputs = [ { type: "vec4", name: "texture" }, ...h.inputs]
+        }
+    })
+
     const functionOptions = hydraFuncs.map((h) => ({ 
-        label: `${h.name}()`, type: h.type, 
+        label: `${h.name}()`, type: h.type, name: h.name,
         info:  h.inputs !== undefined ? `${h.name}( ${h.inputs.map((input) => `${input.name}${input.default ? ` = ${input.default}`: ''}`).join(', ')} )` : ''
     }))
   
@@ -29,6 +35,10 @@ export default (hydra) => {
   
     const srcOptions = functionOptions.filter((h) => h.type === 'src')
     const chainOptions = functionOptions.filter((h) => h.type != 'src')
-    
-    return { srcOptions, chainOptions, hydraGlobals }
+    const outputOptions = hydraGlobals.filter((h) => h.type === 'Output')
+    const externalSourceOptions =  hydraGlobals.filter((h) => h.type === 'HydraSource')
+    // const textureOptions = [...outputOptions]
+    const combineNames = functionOptions.filter((h) => h.type === 'combine' || h.type === 'combineCoord').map((h) => h.name)
+    console.log('functionOptions', functionOptions)
+    return { srcOptions, chainOptions, hydraGlobals, outputOptions, externalSourceOptions, combineNames }
   }
