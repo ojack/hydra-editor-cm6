@@ -9,7 +9,15 @@ osc(4, 0.1, 1.2).out()
 
 const autocomplete = createHydraAutocomplete(hydra)
 
-const editor = new Editor({ parent: document.querySelector('#app'), autocompleteOptions: autocomplete })
+const el = document.createElement('div')
+el.style.position = "absolute"
+el.style.width = "100%"
+el.style.top = "0px"
+el.style.left = "0px"
+el.style.padding = "10px"
+document.body.appendChild(el)
+
+const editor = new Editor({ parent: el, autocompleteOptions: autocomplete })
 
 editor.on('editor:evalLine', (line) => {
     console.log('called eval line!')

@@ -17,6 +17,7 @@ import { lintKeymap } from "@codemirror/lint"
 import { commentKeymap } from '@codemirror/comment';
 import { javascript } from "@codemirror/lang-javascript"
 import { oneDark } from '@codemirror/theme-one-dark';
+import { solarizedDark } from 'cm6-theme-solarized-dark';
 
 import { getLine, getBlock, getSelection } from './evalKeymaps.js'
 import hydraKeys from './hydra-environment/keymaps.js'
@@ -63,7 +64,7 @@ export default class Editor extends EventEmitter {
           bracketMatching(),
           closeBrackets(),
           autocompletion({ 
-           override: [autocompleteOptions]
+           override: [autocompleteOptions], /*closeOnBlur: false*/
           }),
           rectangularSelection(),
           crosshairCursor(),
@@ -85,7 +86,7 @@ export default class Editor extends EventEmitter {
           EditorView.theme({
             '&': {
               backgroundColor: 'transparent',
-              fontSize: '20px',
+              fontSize: '16px',
             },
             '& .cm-line': {
               maxWidth: 'fit-content',
@@ -95,12 +96,39 @@ export default class Editor extends EventEmitter {
             '&.cm-focused': {
               outline: 'none',
             },
+            '.cm-completionIcon': {
+              width: '8px',
+              height: '8px',
+              opacity: 1,
+              paddingRight: '0px',
+              marginRight: '6px'
+               
+            },
+            '.cm-completionIcon-src': {
+              backgroundColor: 'orange',
+            },
+            '.cm-completionIcon-coord': {
+              backgroundColor: 'yellow',
+            },
+            '.cm-completionIcon-color': {
+              backgroundColor: 'lightgreen',
+            },
+            '.cm-completionIcon-combine': {
+              backgroundColor: 'lightblue',
+            },
+            '.cm-completionIcon-combineCoord': {
+              backgroundColor: 'purple',
+            },
+            '.cm-completionIcon-src:after': {
+              content: 'ƒ'
+          }
             // // adds word wrapping
             // '.cm-content': {
             //   whiteSpace: 'pre-wrap'
             // }
           }),
           oneDark
+          // solarizedDark
         ]
       }),
       parent: parent

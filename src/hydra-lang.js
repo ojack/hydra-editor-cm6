@@ -32,6 +32,20 @@ export default (hydra) => {
     }})
   
     const hydraFuncs = hydraFunctions().filter((h) => !filterOut.includes(h.name))
+
+    const setFunctionOptions = hydraFuncs.map((h) => {
+        const g = Object.assign({}, h, { glsl: '<placeholder>' })
+        const str =  JSON.stringify(g, null, 2)
+        const str2 = `\`
+     ${h.glsl}
+    \``
+        const r = str.replace('"<placeholder>"', str2)
+        console.log('replaced', r)
+        return {
+        label: `setFunction(<${h.name}>)`,
+        apply: r
+    }})
+
     hydraFuncs.forEach((h) => {
         if (h.type === "combine" || h.type === "combineCoord") {
             h.inputs = [ { type: "vec4", name: "texture" }, ...h.inputs]
@@ -40,6 +54,7 @@ export default (hydra) => {
 
     const functionOptions = hydraFuncs.map((h) => ({ 
         label: `${h.name}()`, type: h.type, name: h.name, /*detail: h.type,*/
+        boost:  h.type === 'src' ? 99 : h.type === 'coord' ? 90: h.type === 'color' ? 40 : h.type === 'combine' ? 20 : 0,
         info:  h.inputs !== undefined ? `${h.name}( ${h.inputs.map((input) => `${input.name}${input.default ? ` = ${input.default}`: ''}`).join(', ')} )` : ''
     }))
   
@@ -59,5 +74,5 @@ export default (hydra) => {
     const combineNames = functionOptions.filter((h) => h.type === 'combine' || h.type === 'combineCoord').map((h) => h.name)
     const hydraGlobals = synthParams.filter((h) => h.type === 'function' &&  !srcNames.includes(h.name)|| userConstants.includes(h.label))
     console.log('functionOptions', functionOptions, srcNames, synthParams)
-    return { srcOptions, chainOptions, hydraGlobals, hydraConstants, outputOptions, externalSourceOptions, combineNames }
+    return { srcOptions, chainOptions, hydraGlobals, setFunctionOptions, hydraConstants, outputOptions, externalSourceOptions, combineNames }
   }
