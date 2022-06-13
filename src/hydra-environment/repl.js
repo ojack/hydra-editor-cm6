@@ -1,7 +1,20 @@
+// import esprima from 'esprima'
+// import jslint from './jslint.mjs'
+// console.log('ESPRIMA', esprima, jslint)
+
 export default {
   eval: (arg) => {
+    try {
+       const parsed = esprima.parseScript(arg)
+      // const parsed = jslint(arg)
+      console.log('PARSED', parsed)
+
+    } catch (err) {
+      console.log('ERROR parsing', err)
+    }
   // test getting error line number by generating script tag
   // to do: remove scripts that throw an error
+  // SO FAR, is working with undefined errors, but not with mismatched brackets
   // this method ends up with lotsss of script tags added to the head
   const jsString =  `(async() => {
 ${arg}
