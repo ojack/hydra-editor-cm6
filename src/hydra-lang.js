@@ -1,4 +1,4 @@
-import hydraFunctions from 'hydra-synth/src/glsl/glsl-functions'
+import hydraFunctions from 'hydra-synth/src/glsl/glsl-functions.js'
 
 const filterOut = ['prev', 'sum']
 

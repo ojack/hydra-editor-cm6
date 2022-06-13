@@ -1,3 +1,8 @@
+
+
 export default {
-    base: '/hydra-editor-cm6/'
+    base: '/hydra-editor-cm6/',
+    define: {
+        "global": {},
+      },
 }

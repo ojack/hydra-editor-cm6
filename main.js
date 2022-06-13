@@ -1,10 +1,10 @@
+
 import Editor from './src/editor.js'
 import repl from './src/hydra-environment/repl.js'
 import createHydraAutocomplete from './src/hydra-autocomplete.js'
 
 const hydra = new Hydra()
 osc(4, 0.1, 1.2).out()
-
 
 
 const autocomplete = createHydraAutocomplete(hydra)
